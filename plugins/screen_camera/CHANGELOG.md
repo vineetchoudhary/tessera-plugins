@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.20 - 2026-11-21
+- Install this test build on the existing camera boards and the Waveshare LCD-7 on the same Tessera release.
+
 ## 0.6.19 - 2026-11-21
 - Install this test build on the Waveshare LCD-7 with current Tessera releases using its existing touch I2C bus.
 

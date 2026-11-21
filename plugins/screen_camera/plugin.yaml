@@ -1,11 +1,11 @@
 # What a screen gets when it takes this plugin: its camera sensor as ESPHome's camera, which Home Assistant shows as a
 # camera of the screen's device. Tessera's core shows its dot on the glass while the camera is in use.
 
-# The LCD-7's OV5647 shares the touch bus and has its own clock. Supply both values for released Tessera profiles
-# that do not yet declare them. The manifest limits this package to wavesharep47.
+# Use the board's camera wiring. On the LCD-7, the OV5647 shares the touch bus and has its own clock.
+# Separate defaults keep the LCD-7 fallback from overriding the board's existing substitutions.
 defaults:
-  CAMERA_I2C: touch_bus
-  CAMERA_XCLK_PIN: "-1"
+  SCREEN_CAMERA_I2C: ${ (CAMERA_I2C | default("touch_bus")) if BOARD_ID == "wavesharep47" else CAMERA_I2C }
+  SCREEN_CAMERA_XCLK_PIN: ${ (CAMERA_XCLK_PIN | default("-1")) if BOARD_ID == "wavesharep47" else CAMERA_XCLK_PIN }
 
 # The sensor through the ESP32-P4's camera interface, image processor and hardware JPEG encoder (Espressif's esp_video).
 # Pictures are made only while Home Assistant asks for them, at most five a second; the pipeline rests five seconds
@@ -13,9 +13,9 @@ defaults:
 esp_video_camera:
   id: ts_camera
   name: "Camera"
-  i2c_id: ${CAMERA_I2C}
-  enable_xclk: ${ "true" if (CAMERA_XCLK_PIN | int) >= 0 else "false" }
-  xclk_pin: ${CAMERA_XCLK_PIN}
+  i2c_id: ${SCREEN_CAMERA_I2C}
+  enable_xclk: ${ "true" if (SCREEN_CAMERA_XCLK_PIN | int) >= 0 else "false" }
+  xclk_pin: ${SCREEN_CAMERA_XCLK_PIN}
   device: jpeg
   resolution: auto
   jpeg_quality: 80                 # 1 to 100, higher is better: a picture of about 150 to 300 KB
@@ -31,13 +31,13 @@ ov02c10:
 # The SmartSens SC202CS (SC2356) of the M5Stack Tab5 and the reTerminal D1001: its black level, which their ESP32-P4's
 # image processor cannot take off (components/sc202cs). It leaves a sensor of another id alone.
 sc202cs:
-  i2c_id: ${CAMERA_I2C}
+  i2c_id: ${SCREEN_CAMERA_I2C}
 
 # The OmniVision OV5647 of the Waveshare ESP32-P4 7B's camera kit (and the Raspberry Pi cameras of that sensor): its
 # colours in the order Espressif's driver declares, also when the camera flips it to turn the picture
 # (components/ov5647). It leaves a sensor of another id alone.
 ov5647:
-  i2c_id: ${CAMERA_I2C}
+  i2c_id: ${SCREEN_CAMERA_I2C}
 
 # The room's light level and motion, worked out on the screen from the camera's frames: no picture leaves the screen for
 # them. Off until a person switches it on, because the camera then keeps running (at the frame rate above); the core's dot

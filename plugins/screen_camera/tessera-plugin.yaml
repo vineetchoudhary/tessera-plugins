@@ -1,9 +1,9 @@
 # Screen camera: the screen's own camera as a camera in Home Assistant. The picture is made on the screen in hardware
 # (the ESP32-P4's image processor and JPEG encoder, ESPHome's camera API), only when Home Assistant asks for one; the
-# core's dot shows while it does (plugin API 0.17). This build is for the LCD-7's OV5647 and brings the camera as
+# core's dot shows while it does (plugin API 0.17). The plugin drives the board's camera sensor and brings it as
 # `ts_camera` for a plugin that builds on it.
 id: screen_camera
-version: 0.6.19
+version: 0.6.20
 api: "0.23"
 icon: cctv
 maintainer: MaxGramser
@@ -14,8 +14,16 @@ requires:
   esphome: 2026.9.0
   psram: true
 provides: [camera]
-# The test package supplies the LCD-7's camera substitutions.
-boards: [wavesharep47]
+# The stock camera profiles and the LCD-7. The test package supplies missing camera wiring for the LCD-7.
+boards:
+  - reterminald1001
+  - tab5
+  - jc8012p4a1
+  - jc8012p4a1v2
+  - jc8012p4a1v3
+  - jc1060p470v2
+  - jc4880p443
+  - wavesharep47
 flash_kb: 310
 
 settings:

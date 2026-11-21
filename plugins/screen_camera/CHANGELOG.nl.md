@@ -1,5 +1,8 @@
 # Wijzigingen
 
+## 0.6.20 - 2026-11-21
+- Installeer deze testversie op de bestaande cameraborden en de Waveshare LCD-7 met dezelfde Tessera-versie.
+
 ## 0.6.19 - 2026-11-21
 - Installeer deze testversie op de Waveshare LCD-7 met de huidige Tessera-versie via de bestaande I2C-bus.
 
