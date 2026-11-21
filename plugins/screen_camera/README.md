@@ -4,39 +4,36 @@ See the screen's own camera in Home Assistant. The screen becomes a camera of it
 dashboard, a stream when you open it, and anything Home Assistant does with a camera (a snapshot in an automation, a
 recording).
 
-The picture is made on the screen in hardware, only while Home Assistant asks for one. While the camera is in use,
-Tessera shows a dot in the top right corner of the screen, so whoever stands in front of it knows; no setting hides it.
+The screen encodes snapshots and video in hardware. Tessera always shows a dot in the top right corner during camera use.
 
 ## What you need
 
-- A screen whose board has a camera that Tessera knows how to power and reach: the reTerminal D1001, the M5Stack Tab5,
-  or a Guition ESP32-P4 screen in its camera version ("C" in the model name): the JC8012P4A1 (also its V2 and V3),
-  the JC1060P470 V2 and the JC4880P443. The Guition ones are new and tried on the JC8012P4A1 V3 only.
-- Nothing else in Home Assistant: the camera comes with the screen's device in the ESPHome integration.
+- A reTerminal D1001, an M5Stack Tab5, or a Guition ESP32-P4 screen in its camera version ("C" in the model name).
+  This includes the JC8012P4A1 (also V2 and V3), the JC1060P470 V2 and the JC4880P443. Of the Guition models,
+  the camera has been tested on the JC8012P4A1 V3.
+- The Waveshare ESP32-P4-WIFI6-Touch-LCD-7 (720 × 1280) also works with its OV5647 camera once your Tessera version
+  includes camera support for the LCD-7 board profile.
 
 ## Set up
 
-1. In Tessera, open **Plugins**, choose **Screen camera** and tick your screens. Each screen builds once with it.
-2. In Home Assistant, open the screen's device (Settings, Devices): its camera is there as **Camera**. Put it on a
-   dashboard with a Picture entity or a Picture glance card.
-3. The camera stands upright by itself, also on a screen turned half way round. On a screen mounted the other way
-   round, switch on **Camera upside down** in the plugin's settings.
+1. In Tessera, open **Plugins**, choose **Screen camera** and select your screens. Each screen builds once with it.
+2. Follow the [Video](#video) setup for live video and sound. If you switch **Video** off before building, the
+   screen's ESPHome device in Home Assistant gets a **Camera** entity for snapshots. You can add it to a dashboard
+   with a Picture entity or Picture glance card.
+3. If the image is upside down, turn on **Camera upside down** in the plugin's settings.
 4. Optional: switch on **Light level and motion** in the plugin's settings (the screen's Plugins tab in Tessera, or
    **Camera light level and motion** on the device in Home Assistant). Then **Light level** and **Motion** follow the
    room.
 
 ## Video
 
-The part **Video** (on when you add the plugin, in the plugin's details on the screen's Plugins tab) makes the camera
-live video with sound in Home Assistant: H.264 from the screen's own video encoder, the camera's own size (1280 x 720 on most boards) at 15 frames a second,
-and the microphone as Opus, in sync, about a third of a second behind. It plays in Home Assistant's browser page and
-app like any camera.
+**Video** is on by default. It streams H.264 from the screen's hardware encoder and Opus audio from its microphone.
 
-1. Build the screen with the part on.
-2. In Tessera, open **Settings, Video in Home Assistant**, press **Install in Home Assistant**, then **Restart Home
-   Assistant**. This is once for your whole home.
-3. From then on each screen with the part has a camera **Video** on its device in Home Assistant. Tessera adds it by
-   itself, and nobody types a password: it is worked out from the screen's API key on both sides.
+1. Build the screen with **Video** on in the screen's **Plugins** tab.
+2. In Tessera, open **Settings → Video in Home Assistant**, select **Install in Home Assistant**, then restart Home
+   Assistant. This is a one-time setup for all your Tessera screens.
+3. Open the screen's device in Home Assistant and select **Video**. For live video on your dashboard, use that entity
+   in a Picture entity card with `camera_view: live`. Tessera derives the video password from the screen's API key.
 
 With the part, the camera runs from the screen's start, and its pictures come from the video: the camera **Camera**
 leaves the screen's device, and **Video** gives the stills. Light level and motion keep working. The dot is solid while
@@ -50,7 +47,8 @@ Tessera's docs/CAMERA.md, "The screen's own camera as video in Home Assistant", 
 
 ## Light level and motion
 
-Off until you switch it on. While it is on, the camera keeps running and the screen works out two things from it:
+Sensing is off by default. Turn on **Camera light level and motion** to report both values in Home Assistant even
+when nobody is watching the camera.
 
 - **Light level**, an estimate in lux from the picture's brightness, the exposure time and the sensor's gain. It is right
   in proportion (twice the light reads about twice the lux), not exact: pick the thresholds of your automations by
@@ -96,4 +94,4 @@ camera has started it. The OmniVision OV5647 (the Waveshare ESP32-P4 7B's camera
 sensor) has one as well, `components/ov5647`: Espressif's formats set one of its two mirror bits and its flips move its
 colours, so the component sets the other bit and moves the sensor's window by a pixel for each flip, every time the
 camera has handed the sensor its controls; without it the picture was purple, with orange as green, and turned half way
-round red and blue swapped.
+round red and blue swapped. The component also reads the sensor's exposure and gain registers for light level and motion.

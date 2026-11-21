@@ -1194,8 +1194,6 @@ bool ESPVideoCamera::start_jpeg_frame_consumer(
   return true;
 }
 
-// Tessera: see the header. Exposure is in sensor lines (V4L2_CID_EXPOSURE), each the format's tline_ns long; gain is
-// either a number (relative to its minimum) or an index into a menu of gains (relative to the menu's first).
 // ---- The sensors (camera_sensor.h) ----
 // The drivers that found their sensor, in the order they added themselves: one camera on a board, so one in practice.
 static constexpr int MAX_SENSORS = 4;
@@ -1277,6 +1275,17 @@ void ESPVideoCamera::apply_frame_rate_() {
 bool ESPVideoCamera::read_sensor_exposure(float *exposure_us, float *gain) {
   if (this->capture_fd_ < 0)
     return false;
+
+  // A detected sensor may read its own integration time and gain when its V4L2 driver does not expose them.
+  const int n = s_sensor_count.load(std::memory_order_acquire);
+  for (int i = 0; i < n; ++i) {
+    if (auto read = s_sensors[i]->read_exposure) {
+      esp_cam_sensor_format_t format {};
+      return ioctl(this->capture_fd_, VIDIOC_G_SENSOR_FMT, &format) == 0 && read(&format, exposure_us, gain);
+    }
+  }
+
+  // V4L2 reports exposure in lines and gain as a number or a menu index.
   struct v4l2_ext_control control {};
   struct v4l2_ext_controls controls {};
   controls.count = 1;

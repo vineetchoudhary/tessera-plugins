@@ -1,5 +1,10 @@
 # Wijzigingen
 
+## 0.6.18 - 2026-11-21
+- Ondersteuning voor de OV5647-camera van de Waveshare ESP32-P4-WIFI6-Touch-LCD-7 (720 × 1280) met een geschikt Tessera-bordprofiel.
+- Lichtniveau gebruikt de belichtingstijd en versterking van de OV5647. Bewegingsdetectie gebruikt die waarden om
+  veranderingen in verlichting te herkennen.
+
 ## 0.6.17 - 2026-11-17
 - **Een kijker wordt niet geweigerd om verbindingen die nooit keken.** De video heeft plek voor drie kijkers. Home
   Assistant opent een verbinding telkens als het een beeld wil ophalen of uitzoekt hoe het de video afspeelt, en een

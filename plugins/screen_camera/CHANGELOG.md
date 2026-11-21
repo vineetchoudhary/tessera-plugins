@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.18 - 2026-11-21
+- Support the OV5647 camera on the Waveshare ESP32-P4-WIFI6-Touch-LCD-7 (720 × 1280) with a compatible Tessera board profile.
+- Light level can use the OV5647's exposure and gain. Motion uses those readings to help ignore changes in lighting.
+
 ## 0.6.17 - 2026-11-17
 - **A viewer is not refused for connections that never watched.** The video has room for three viewers. Home Assistant
   opens a connection each time it tries to get a picture or work out how to play the video, and one that never went on

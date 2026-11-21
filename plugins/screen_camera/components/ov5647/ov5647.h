@@ -6,14 +6,14 @@
 
 namespace esphome::ov5647 {
 
-// The OV5647's colour order through its format and its flips (ov5647_window.h says what and why), once it read the
-// sensor's id: after every time the camera has handed the sensor its controls (esp_video_camera's camera_sensor.h,
-// controls_set), on the camera's task.
+// Keeps the OV5647's colour order through format and flip changes (ov5647_window.h). Once it has found the sensor,
+// it also reads the exposure and gain for sensing. Both run on the capture task through camera_sensor.h.
 class OV5647 : public Component, public i2c::I2CDevice {
  public:
   void setup() override;
   void dump_config() override;
   void controls_set();
+  bool read_exposure(float line_us, float &exposure_us, float &gain);
   // After esp_video_camera (DATA), whose setup starts the sensor.
   float get_setup_priority() const override { return setup_priority::PROCESSOR; }
 

@@ -4,6 +4,7 @@
 // names no sensor (it is found at boot); a driver that finds its sensor adds itself here (tessera_camera_add_sensor):
 // the OV02C10 in its detect (ov02c10_sensor.c), the SC202CS from Screen camera's small component once it read its id
 // (sc202cs.cpp). Plain C, for a driver in C. A field a driver leaves NULL is a thing it cannot do.
+#include <stdbool.h>
 #include <stddef.h>
 
 #include "esp_cam_sensor_types.h"
@@ -34,6 +35,9 @@ typedef struct tessera_camera_sensor {
   // whose registers the format or a flip leaves wrong for the picture puts them right here: the OV5647, whose flips
   // move its colour order and whose format sets one of its two mirror bits (components/ov5647).
   void (*controls_set)(void);
+  // For a sensor that does not report exposure and gain through V4L2. Called on the capture task with the active
+  // sensor format. Returns exposure in microseconds and gain as a multiplier (1 = unity).
+  bool (*read_exposure)(const esp_cam_sensor_format_t *format, float *exposure_us, float *gain);
 } tessera_camera_sensor_t;
 
 // A driver that found its sensor adds it (once; the table outlives the call).

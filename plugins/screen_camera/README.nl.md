@@ -4,40 +4,37 @@ Bekijk de eigen camera van het scherm in Home Assistant. Het scherm wordt daar e
 op een dashboard, een stream als je hem opent, en alles wat Home Assistant met een camera doet (een momentopname in een
 automatisering, een opname).
 
-Het beeld wordt op het scherm zelf in hardware gemaakt, alleen zolang Home Assistant erom vraagt. Zolang de camera in
-gebruik is, toont Tessera een stip in de rechterbovenhoek van het scherm, zodat wie ervoor staat het weet; geen
-instelling haalt hem weg.
+Het scherm codeert momentopnamen en video in hardware. Tessera toont altijd rechtsboven een stip als de camera in gebruik is.
 
 ## Wat je nodig hebt
 
-- Een scherm waarvan het bord een camera heeft die Tessera kan aanzetten en bereiken: de reTerminal D1001, de M5Stack
-  Tab5, of een Guition ESP32-P4-scherm in de cameraversie ("C" in de modelnaam): de JC8012P4A1 (ook de V2 en V3), de
-  JC1060P470 V2 en de JC4880P443. De Guition-schermen zijn nieuw en alleen op de JC8012P4A1 V3 geprobeerd.
-- Verder niets in Home Assistant: de camera hoort bij het apparaat van het scherm in de ESPHome-integratie.
+- Een reTerminal D1001, een M5Stack Tab5 of een Guition ESP32-P4-scherm in de cameraversie ("C" in de modelnaam).
+  Hieronder vallen de JC8012P4A1 (ook V2 en V3), de JC1060P470 V2 en de JC4880P443. Van de Guition-modellen
+  is de camera op de JC8012P4A1 V3 getest.
+- De Waveshare ESP32-P4-WIFI6-Touch-LCD-7 (720 × 1280) werkt ook met zijn OV5647-camera zodra jouw versie van
+  Tessera cameraondersteuning voor het LCD-7-bordprofiel bevat.
 
 ## Instellen
 
 1. Open in Tessera **Plugins**, kies **Schermcamera** en vink je schermen aan. Elk scherm wordt een keer gebouwd.
-2. Open in Home Assistant het apparaat van het scherm (Instellingen, Apparaten): de camera staat er als **Camera**.
-   Zet hem op een dashboard met een kaart die camerabeeld toont (Picture entity of Picture glance).
-3. De camera staat vanzelf rechtop, ook op een scherm dat een halve slag gedraaid is. Hangt het scherm andersom, zet
-   dan **Camera omgekeerd** aan bij de instellingen van de plugin.
+2. Volg de [Video](#video)-stappen voor live video en geluid. Zet je **Video** uit voordat je de firmware bouwt, dan
+   krijgt het ESPHome-apparaat van het scherm in Home Assistant een **Camera**-entiteit voor momentopnamen. Voeg
+   de entiteit toe aan een dashboard met een Picture entity- of Picture glance-kaart.
+3. Staat het beeld ondersteboven, zet dan **Camera omgekeerd** aan bij de instellingen van de plugin.
 4. Optioneel: zet **Lichtniveau en beweging** aan bij de instellingen van de plugin (het tabblad Plugins van het scherm
    in Tessera, of **Camera light level and motion** bij het apparaat in Home Assistant). Dan volgen **Light level** en
    **Motion** de kamer.
 
 ## Video
 
-Het onderdeel **Video** (aan als je de plugin toevoegt, in de details van de plugin op het tabblad Plugins van het
-scherm) maakt van de camera live video met geluid in Home Assistant: H.264 uit de eigen video-encoder van het scherm,
-de maat van de camera (1280 x 720 op de meeste borden) met 15 beelden per seconde, en de microfoon als Opus, in sync, ongeveer een derde seconde later. Het speelt in
-de browserpagina en de app van Home Assistant zoals elke camera.
+**Video** staat standaard aan. Het scherm streamt H.264 via zijn hardware-encoder en Opus-geluid via zijn microfoon.
 
-1. Bouw het scherm met het onderdeel aan.
-2. Open in Tessera **Instellingen, Video in Home Assistant**, druk op **Installeren in Home Assistant** en daarna op
-   **Home Assistant herstarten**. Dat is één keer voor je hele huis.
-3. Vanaf dan heeft elk scherm met het onderdeel een camera **Video** bij zijn apparaat in Home Assistant. Tessera voegt
-   hem zelf toe, en niemand typt een wachtwoord: dat wordt aan beide kanten uit de API-sleutel van het scherm berekend.
+1. Bouw de firmware met **Video** aan op het tabblad **Plugins** van het scherm.
+2. Open in Tessera **Instellingen → Video in Home Assistant**, kies **Installeren in Home Assistant** en herstart
+   daarna Home Assistant. Dit hoeft maar één keer voor alle Tessera-schermen.
+3. Open het apparaat van het scherm in Home Assistant en kies **Video**. Gebruik die entiteit in een Picture
+   entity-kaart met `camera_view: live` voor live beeld op je dashboard. Tessera leidt het videowachtwoord af uit de
+   API-sleutel van het scherm.
 
 Met het onderdeel loopt de camera vanaf de start van het scherm, en zijn foto's komen uit de video: de camera **Camera**
 verdwijnt van het apparaat van het scherm, en **Video** geeft de stilstaande beelden. Lichtniveau en beweging blijven
@@ -52,7 +49,8 @@ docs/CAMERA.md van Tessera, "The screen's own camera as video in Home Assistant"
 
 ## Lichtniveau en beweging
 
-Uit tot je het aanzet. Zolang het aan staat blijft de camera draaien en bepaalt het scherm er twee dingen uit:
+Detectie staat standaard uit. Zet **Camera light level and motion** aan om beide waarden in Home Assistant te zien,
+ook als niemand naar het camerabeeld kijkt.
 
 - **Light level**, een schatting in lux uit de helderheid van het beeld, de belichtingstijd en de versterking van de
   sensor. Hij klopt in verhouding (twee keer zoveel licht is ongeveer twee keer zoveel lux), niet precies: kies de
@@ -87,7 +85,8 @@ zwartniveau van de sensor nadat de camera hem heeft gestart. De OmniVision OV564
 ESP32-P4 7B, de Raspberry Pi-camera's met die sensor) heeft er ook een, `components/ov5647`: Espressifs formaten zetten
 een van zijn twee spiegelbits en zijn flips verschuiven zijn kleuren, dus zet de component het andere bit en schuift hij
 het venster van de sensor een pixel op voor elke flip, telkens als de camera de sensor zijn instellingen heeft gegeven;
-zonder dat was het beeld paars, met oranje als groen, en half omgedraaid wisselden rood en blauw. De beelden van de camera gaan naar een verdeler van Screen
+zonder dat was het beeld paars, met oranje als groen, en half omgedraaid wisselden rood en blauw. Het component leest
+ook de belichtingstijd en versterking voor lichtniveau en beweging. De beelden van de camera gaan naar een verdeler van Screen
 camera (`components/screen_camera/frame_hub.h`) die ze doorgeeft aan lichtniveau en beweging en aan de video, en de
 sensoren die de camera zelf vindt staan in de tabel `components/screen_camera/sensors.py`. Wat de driver van een
 sensor kan naast zijn formaat, een lager beeldtempo als de camera alleen meet en een stand over zijn hele beeldveld,
