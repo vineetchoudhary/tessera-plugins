@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.19 - 2026-11-21
+- Install this test build on the Waveshare LCD-7 with current Tessera releases using its existing touch I2C bus.
+
 ## 0.6.18 - 2026-11-21
 - Support the OV5647 camera on the Waveshare ESP32-P4-WIFI6-Touch-LCD-7 (720 × 1280) with a compatible Tessera board profile.
 - Light level can use the OV5647's exposure and gain. Motion uses those readings to help ignore changes in lighting.

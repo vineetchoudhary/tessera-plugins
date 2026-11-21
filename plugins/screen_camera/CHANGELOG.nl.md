@@ -1,5 +1,8 @@
 # Wijzigingen
 
+## 0.6.19 - 2026-11-21
+- Installeer deze testversie op de Waveshare LCD-7 met de huidige Tessera-versie via de bestaande I2C-bus.
+
 ## 0.6.18 - 2026-11-21
 - Ondersteuning voor de OV5647-camera van de Waveshare ESP32-P4-WIFI6-Touch-LCD-7 (720 × 1280) met een geschikt Tessera-bordprofiel.
 - Lichtniveau gebruikt de belichtingstijd en versterking van de OV5647. Bewegingsdetectie gebruikt die waarden om

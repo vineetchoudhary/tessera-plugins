@@ -8,15 +8,12 @@ Het scherm codeert momentopnamen en video in hardware. Tessera toont altijd rech
 
 ## Wat je nodig hebt
 
-- Een reTerminal D1001, een M5Stack Tab5 of een Guition ESP32-P4-scherm in de cameraversie ("C" in de modelnaam).
-  Hieronder vallen de JC8012P4A1 (ook V2 en V3), de JC1060P470 V2 en de JC4880P443. Van de Guition-modellen
-  is de camera op de JC8012P4A1 V3 getest.
-- De Waveshare ESP32-P4-WIFI6-Touch-LCD-7 (720 × 1280) werkt ook met zijn OV5647-camera zodra jouw versie van
-  Tessera cameraondersteuning voor het LCD-7-bordprofiel bevat.
+- Een Waveshare ESP32-P4-WIFI6-Touch-LCD-7 (720 × 1280) met zijn OV5647-camera en het Tessera-bordprofiel `wavesharep47`.
 
 ## Instellen
 
-1. Open in Tessera **Plugins**, kies **Schermcamera** en vink je schermen aan. Elk scherm wordt een keer gebouwd.
+1. Open in Tessera **Plugins** en voeg de GitHub-link van deze plugin toe. Kies **Test een branch** en vul
+   `lcd7-test` in. Selecteer de LCD-7 om die met **Schermcamera** te bouwen.
 2. Volg de [Video](#video)-stappen voor live video en geluid. Zet je **Video** uit voordat je de firmware bouwt, dan
    krijgt het ESPHome-apparaat van het scherm in Home Assistant een **Camera**-entiteit voor momentopnamen. Voeg
    de entiteit toe aan een dashboard met een Picture entity- of Picture glance-kaart.

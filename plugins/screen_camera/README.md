@@ -8,15 +8,12 @@ The screen encodes snapshots and video in hardware. Tessera always shows a dot i
 
 ## What you need
 
-- A reTerminal D1001, an M5Stack Tab5, or a Guition ESP32-P4 screen in its camera version ("C" in the model name).
-  This includes the JC8012P4A1 (also V2 and V3), the JC1060P470 V2 and the JC4880P443. Of the Guition models,
-  the camera has been tested on the JC8012P4A1 V3.
-- The Waveshare ESP32-P4-WIFI6-Touch-LCD-7 (720 × 1280) also works with its OV5647 camera once your Tessera version
-  includes camera support for the LCD-7 board profile.
+- A Waveshare ESP32-P4-WIFI6-Touch-LCD-7 (720 × 1280) with its OV5647 camera and Tessera's `wavesharep47` board profile.
 
 ## Set up
 
-1. In Tessera, open **Plugins**, choose **Screen camera** and select your screens. Each screen builds once with it.
+1. In Tessera, open **Plugins** and choose **Add with a link**. Add this plugin's GitHub link, choose **Test a branch**
+   and enter `lcd7-test`. Select the LCD-7 to build it with **Screen camera**.
 2. Follow the [Video](#video) setup for live video and sound. If you switch **Video** off before building, the
    screen's ESPHome device in Home Assistant gets a **Camera** entity for snapshots. You can add it to a dashboard
    with a Picture entity or Picture glance card.
